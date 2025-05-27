@@ -1,0 +1,24 @@
+# Terraform state
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Terraform variable files
+*.tfvars
+*.tfvars.json
+
+# .terraform directory
+.terraform/
+
+# Sensitive files
+*.pem
+*.key
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Zips
+*.zip

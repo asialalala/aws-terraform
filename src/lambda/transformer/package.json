@@ -1,0 +1,11 @@
+
+{
+    "name": "transformer",
+    "version": "1.0.0",
+    "description": "error handler lambda",
+    "main": "main.js",
+    "dependencies": {},
+    "devDependencies": {
+        "aws-sdk": "^2.1045.0"
+    }
+}

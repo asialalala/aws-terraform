@@ -1,0 +1,66 @@
+{
+  "Comment": "Workflow for processing sensor data",
+  "StartAt": "distributor",
+  "States": {
+    "distributor": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:486760603738:function:distributor:$LATEST",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "HandleError",
+          "ResultPath": null
+        }
+      ],
+      "Next": "Map"
+    },
+    "HandleError": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:486760603738:function:handleError",
+      "End": true
+    },
+    "Map": {
+      "Type": "Map",
+      "ItemProcessor": {
+        "ProcessorConfig": {
+          "Mode": "INLINE"
+        },
+        "StartAt": "dataTransform",
+        "States": {
+          "dataTransform": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+              "FunctionName": "arn:aws:lambda:us-east-1:486760603738:function:transformator:$LATEST",
+              "Payload.$": "$"
+            },
+            "Retry": [
+              {
+                "ErrorEquals": [
+                  "Lambda.ServiceException",
+                  "Lambda.AWSLambdaException",
+                  "Lambda.SdkClientException",
+                  "Lambda.TooManyRequestsException"
+                ],
+                "IntervalSeconds": 1,
+                "MaxAttempts": 3,
+                "BackoffRate": 2,
+                "JitterStrategy": "FULL"
+              }
+            ],
+            "End": true,
+            "Catch": [
+              {
+                "ErrorEquals": []
+              }
+            ]
+          }
+        }
+      },
+      "End": true
+    }
+  }
+}
