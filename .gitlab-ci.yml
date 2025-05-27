@@ -5,7 +5,7 @@ stages:
   - apply
 
 variables:
-  TF_ROOT: src/infra
+  TF_ROOT: infra
 
 before_script:
   - cd $TF_ROOT
@@ -28,7 +28,7 @@ state_list
   image: hashicorp/terraform:light
   script:
     - terraform state list
-    
+
 apply:
   stage: apply
   image: hashicorp/terraform:light
