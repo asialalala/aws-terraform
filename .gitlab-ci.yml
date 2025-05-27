@@ -1,0 +1,38 @@
+stages:
+  - validate
+  - plan
+  - state_list
+  - apply
+
+variables:
+  TF_ROOT: src/infra
+
+before_script:
+  - cd $TF_ROOT
+
+validate:
+  stage: validate
+  image: hashicorp/terraform:light
+  script:
+    - terraform init
+    - terraform validate
+
+plan:
+  stage: plan
+  image: hashicorp/terraform:light
+  script:
+    - terraform plan
+
+state_list
+  stage: state_list
+  image: hashicorp/terraform:light
+  script:
+    - terraform state list
+    
+apply:
+  stage: apply
+  image: hashicorp/terraform:light
+  script:
+    - terraform apply -auto-approve
+  only:
+    - main
