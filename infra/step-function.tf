@@ -9,7 +9,7 @@ resource "aws_sfn_state_machine" "workflow" {
   "States": {
     "distributor": {
       "Type": "Task",
-      "Resource": "${aws_lambda_function.error_handling_lambda.arn}",
+      "Resource": "${module.distributor_lambda.lambda_function_arn}",
       "Catch": [
         {
           "ErrorEquals": [
@@ -23,7 +23,7 @@ resource "aws_sfn_state_machine" "workflow" {
     },
     "HandleError": {
       "Type": "Task",
-      "Resource": "${aws_lambda_function.error_handling_lambda.arn}",
+      "Resource": "${module.error_handling_lambda.lambda_function_arn}",
       "End": true
     },
     "Map": {
@@ -39,7 +39,7 @@ resource "aws_sfn_state_machine" "workflow" {
             "Resource": "arn:aws:states:::lambda:invoke",
             "OutputPath": "$.Payload",
             "Parameters": {
-              "FunctionName": "${aws_lambda_function.transformer_lambda.arn}",
+              "FunctionName": "${module.transformer_lambda.lambda_function_arn}",
               "Payload.$": "$"
             },
             "Retry": [
